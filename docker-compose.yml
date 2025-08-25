@@ -30,8 +30,8 @@ services:
         condition: service_started
 
   # docker compose build alembic
-  # docker compose run --rm alembic alembic revision --autogenerate -m "init schema"
-  # docker compose run --rm alembic alembic upgrade head
+  # new sqlschema: docker compose run --rm alembic alembic revision --autogenerate -m "<MESSAGE>"
+  # do migration: docker compose run --rm alembic alembic upgrade head
   alembic:
     build: .
     command: ["bash", "-c", "alembic upgrade head"]

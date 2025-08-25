@@ -1,10 +1,10 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Enum
+from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 import enum
-from app.database import Base
+from app.models import Base
 
 
 class UserRole(enum.Enum):
@@ -32,7 +32,7 @@ class User(Base):
     organization_id = Column(
         UUID(as_uuid=True),
         ForeignKey("organizations.id"),
-        nullable=False,
+        nullable=True,
     )
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
