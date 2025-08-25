@@ -33,16 +33,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-
-# Debug print (masking secrets)
-if __name__ == "__main__":
-    print("database_url:", settings.database_url)
-    print("redis_url:", settings.redis_url)
-    print("secret_key:", settings.secret_key[:4] + "..." if settings.secret_key else None)
-    print("algorithm:", settings.algorithm)
-    print("access_token_expire_minutes:", settings.access_token_expire_minutes)
-    print("debug:", settings.debug)
-    print("log_level:", settings.log_level)
-    print("max_file_size:", settings.max_file_size)
-    print("max_files_per_task:", settings.max_files_per_task)
-    print("upload_dir:", settings.upload_dir)
