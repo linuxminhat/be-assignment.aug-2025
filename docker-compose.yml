@@ -7,6 +7,8 @@ volumes:
   postgres_data:
 
 services:
+  # docker compose up api
+  # docker compose exec api alembic upgrade head
   api:
     build:
       context: .
@@ -27,6 +29,26 @@ services:
       redis:
         condition: service_started
 
+  # docker compose build alembic
+  # docker compose run --rm alembic alembic revision --autogenerate -m "init schema"
+  # docker compose run --rm alembic alembic upgrade head
+  alembic:
+    build: .
+    command: ["bash", "-c", "alembic upgrade head"]
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./alembic:/riverflow-api/alembic
+      - ./alembic.ini:/riverflow-api/alembic.ini
+      - ./app:/riverflow-api/app
+    # DO NOT mount .:/riverflow-api
+    working_dir: /riverflow-api
+    networks:
+      - riverflow-network
+
   postgres:
     image: postgres:16-alpine
     container_name: riverflow-postgres
@@ -45,7 +67,6 @@ services:
       retries: 5
       interval: 60s
       start_interval: 1s
-
     networks:
       - riverflow-network
 
