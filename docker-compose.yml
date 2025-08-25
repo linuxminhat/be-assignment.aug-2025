@@ -1,0 +1,58 @@
+networks:
+  riverflow-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+  postgres_data:
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: riverflow-api
+    env_file:
+      - .env
+    volumes:
+      - ./app:/riverflow-api/app:delegated # hot-reload
+      - ./uploads:/riverflow-api/uploads:delegated
+    ports:
+      - "8000:8000"
+    networks:
+      - riverflow-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: riverflow-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      start_period: 10s
+      timeout: 1s
+      retries: 5
+      interval: 60s
+      start_interval: 1s
+
+    networks:
+      - riverflow-network
+
+  redis:
+    image: redis:alpine
+    container_name: riverflow-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - riverflow-network

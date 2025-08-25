@@ -1,0 +1,32 @@
+# top-most EditorConfig file
+root = true
+
+# Defaults
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Python: 4 spaces
+[*.py]
+indent_style = space
+indent_size = 4
+
+# YAML: 2 spaces (docker-compose, GitHub Actions, etc.)
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# JSON / TOML: 2 spaces
+[*.{json,toml}]
+indent_style = space
+indent_size = 2
+
+# Makefiles must use tabs
+[Makefile]
+indent_style = tab
+
+# Markdown: keep trailing spaces (for hard line breaks)
+[*.md]
+trim_trailing_whitespace = false
